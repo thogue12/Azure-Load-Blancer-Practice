@@ -20,6 +20,7 @@ resource "azurerm_lb" "load_balancer" {
     public_ip_address_id = azurerm_public_ip.public_ip.id
   }
 
+
   depends_on = [azurerm_public_ip.public_ip]
 }
 
@@ -32,8 +33,10 @@ resource "azurerm_lb_rule" "load_balance_rule" {
   backend_port                   = 80
   frontend_ip_configuration_name = "Public-ip"
   probe_id                       = azurerm_lb_probe.load_balancer_prob.id
+  backend_address_pool_ids = [azurerm_lb_backend_address_pool.backend_pool.id]
   depends_on = [azurerm_lb.load_balancer,
-  azurerm_lb_probe.load_balancer_prob]
+    azurerm_lb_probe.load_balancer_prob
+  ]
 }
 
 #load balancer probe
@@ -55,21 +58,20 @@ resource "azurerm_lb_backend_address_pool" "backend_pool" {
   depends_on = [azurerm_lb.load_balancer]
 }
 
-#add the virtual machines to the backend pool
-resource "azurerm_lb_backend_address_pool_address" "linux_machine_address1" {
-  name                    = "linux_virtual_machine1"
-  backend_address_pool_id = azurerm_lb_backend_address_pool.backend_pool.id
-  virtual_network_id      = azurerm_virtual_network.vnet.id
-  ip_address              = azurerm_network_interface.network_interface.private_ip_address
 
-  depends_on = [azurerm_lb_backend_address_pool.backend_pool]
+
+#associate the NIC of VM1 to the backend pool
+resource "azurerm_network_interface_backend_address_pool_association" "vm1_nic_backend" {
+  network_interface_id    = azurerm_network_interface.network_interface.id
+  ip_configuration_name   = "internal"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.backend_pool.id
 }
 
-resource "azurerm_lb_backend_address_pool_address" "linux_machine_address2" {
-  name                    = "linux_virtual_machine2"
-  backend_address_pool_id = azurerm_lb_backend_address_pool.backend_pool.id
-  virtual_network_id      = azurerm_virtual_network.vnet.id
-  ip_address              = azurerm_network_interface.network_interface2.private_ip_address
 
-  depends_on = [azurerm_lb_backend_address_pool.backend_pool]
+#associate the NIC of VM2 to the backend pool
+resource "azurerm_network_interface_backend_address_pool_association" "vm2_nic_backend" {
+  network_interface_id    = azurerm_network_interface.network_interface2.id
+  ip_configuration_name   = "internal2"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.backend_pool.id
 }
+
