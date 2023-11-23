@@ -78,7 +78,7 @@ variable "heading_one" {
   <script>
     // JavaScript code to detect and display the host dynamically
     var hostname = window.location.hostname;
-    document.getElementById("dynamicHeading").innerHTML = "Welcome to the Website Hosted on: " + hostname thank you for visiting;
+    document.getElementById("dynamicHeading").innerHTML = "Welcome to the Website Hosted on: " + hostname thank you for visiting again;
   </script>
 </body>
 </html>
