@@ -36,7 +36,7 @@ resource "azurerm_virtual_network" "vnet" {
   name                = var.vnet_name
   resource_group_name = azurerm_resource_group.resource_group.name
   location            = azurerm_resource_group.resource_group.location
-  address_space       = ["10.0.0.0/16"]
+  address_space       = ["10.0.1.0/16"]
 
   depends_on = [azurerm_resource_group.resource_group]
 }
@@ -46,7 +46,7 @@ resource "azurerm_subnet" "pub_subnet" {
   name                 = var.subnet_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = azurerm_resource_group.resource_group.name
-  address_prefixes     = ["10.0.0.0/24"]
+  address_prefixes     = ["10.0.1.0/24"]
 
   depends_on = [azurerm_virtual_network.vnet]
 }
