@@ -47,6 +47,7 @@ name: Terraform
   push:
     branches:
       - master
+      - main
   pull_request: null
 permissions:
   contents: read
