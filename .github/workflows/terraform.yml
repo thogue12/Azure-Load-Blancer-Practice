@@ -46,7 +46,7 @@ name: Terraform
 'on':
   push:
     branches:
-      - master
+      - main
   pull_request: null
 permissions:
   contents: read
@@ -72,5 +72,5 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -input=false
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/"master"' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
