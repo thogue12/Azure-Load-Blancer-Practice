@@ -112,6 +112,30 @@ resource "azurerm_network_interface" "network_interface2" {
 }
 
 
+#network interface for control vm
+resource "azurerm_network_interface" "network_interface3" {
+  name                = var.vm_nic3
+  location            = azurerm_resource_group.resource_group.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+
+  ip_configuration {
+    name                          = "internal3"
+    subnet_id                     = azurerm_subnet.pub_subnet.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id = azurerm_public_ip.linux_public_ip3.id
+  }
+}
+
+
+#public ip for control vm
+resource "azurerm_public_ip" "linux_public_ip3" {
+  name                = "ansible_public_ip3"
+  location            = azurerm_resource_group.resource_group.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
 #Network security group for VM1
 resource "azurerm_network_security_group" "network_sg" {
   name                = "allow_web"
@@ -154,47 +178,6 @@ resource "azurerm_network_security_group" "network_sg" {
   }
 }
 
-#Network security group for VM2
-resource "azurerm_network_security_group" "network_sg2" {
-  name                = "allow_web2"
-  location            = azurerm_resource_group.resource_group.location
-  resource_group_name = azurerm_resource_group.resource_group.name
-
-  security_rule {
-    name                       = "allow_https2"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "Internet"
-    destination_address_prefix = "*"
-  }
-
-   security_rule {
-    name                       = "allow_http2"
-    priority                   = 110
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "Internet"
-    destination_address_prefix = "*"
-  }
-  security_rule {
-    name                       = "allow_ssh2"
-    priority                   = 200
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-}
 
 #associate an NSG with a VM NIC
 #VM1 NSG association
@@ -208,5 +191,5 @@ resource "azurerm_network_interface_security_group_association" "vm1_nsg_nic_ass
 
 resource "azurerm_network_interface_security_group_association" "vm2_nsg_nic_association" {
   network_interface_id      = azurerm_network_interface.network_interface2.id
-  network_security_group_id = azurerm_network_security_group.network_sg2.id
+  network_security_group_id = azurerm_network_security_group.network_sg.id
 }

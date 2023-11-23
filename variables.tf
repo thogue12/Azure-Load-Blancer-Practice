@@ -40,6 +40,12 @@ variable "vm_nic2" {
   default = "vm2_nic"
 }
 
+variable "vm_nic3" {
+  type = string
+  description = "name of the second NIC for the linux virtual machine"
+  default = "vm3_nic"
+}
+
 variable "vm1_name" {
   type = string
   description = "name of the first linux virtual machine"
@@ -50,6 +56,12 @@ variable "vm2_name" {
   type = string
   description = "name of the second linux virtual machine"
   default = "linux-vm2"
+}
+
+variable "control_vm" {
+  type = string
+  description = "name of the second ansible virtual machine"
+  default = "ansible-vm"
 }
 
 variable "heading_one" {
