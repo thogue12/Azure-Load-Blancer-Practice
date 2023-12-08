@@ -44,34 +44,47 @@
 
 name: Terraform
 'on':
-  push:
-    branches:
-      - master
-      - main
-  pull_request: null
+  - push
+  - pull_request
 permissions:
   contents: read
 jobs:
   terraform:
     name: Terraform
     runs-on: ubuntu-latest
-    environment: production
     defaults:
       run:
         shell: bash
+        working-directory: ./main
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          cli_config_credentials_token: '${{ secrets.AZURE_CREDENTIALS }}'
+          terraform_version: 1.6.0
       - name: Terraform Init
+        id: init
+        env:
+          AZURE_CLIENT_ID: '${{secretes.AZURE_CLIENT_ID}}'
+          AZURE_CLIENT_SECRET: '${{secretes.AZURE_CLIENT_SECRET}}'
+          AZURE_SUBSCRIPTION_ID: '${{secretes.AZURE_SUBSCRIPTION_ID}}'
+          AZURE_TENANT_ID: '${{secretes.AZURE_TENANT_ID}}'
         run: terraform init
-      - name: Terraform Format
-        run: terraform fmt -check
       - name: Terraform Plan
-        run: terraform plan -input=false
+        id: plan
+        env:
+          AZURE_CLIENT_ID: '${{secretes.AZURE_CLIENT_ID}}'
+          AZURE_CLIENT_SECRET: '${{secretes.AZURE_CLIENT_SECRET}}'
+          AZURE_SUBSCRIPTION_ID: '${{secretes.AZURE_SUBSCRIPTION_ID}}'
+          AZURE_TENANT_ID: '${{secretes.AZURE_TENANT_ID}}'
+        if: github.event_name == 'pull_request'
+        run: terraform plan -no-color
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          AZURE_CLIENT_ID: '${{secretes.AZURE_CLIENT_ID}}'
+          AZURE_CLIENT_SECRET: '${{secretes.AZURE_CLIENT_SECRET}}'
+          AZURE_SUBSCRIPTION_ID: '${{secretes.AZURE_SUBSCRIPTION_ID}}'
+          AZURE_TENANT_ID: '${{secretes.AZURE_TENANT_ID}}'
+        run: terraform apply -auto-approve
