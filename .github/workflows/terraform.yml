@@ -46,7 +46,7 @@ name: Terraform
 on:
  push:
   branches:
-   - main
+   - master
  workflow_dispatch:
   
 permissions:
