@@ -66,25 +66,25 @@ jobs:
       - name: Terraform Init
         id: init
         env:
-          AZURE_CLIENT_ID: '${{secretes.AZURE_CLIENT_ID}}'
-          AZURE_CLIENT_SECRET: '${{secretes.AZURE_CLIENT_SECRET}}'
-          AZURE_SUBSCRIPTION_ID: '${{secretes.AZURE_SUBSCRIPTION_ID}}'
-          AZURE_TENANT_ID: '${{secretes.AZURE_TENANT_ID}}'
+          AZURE_CLIENT_ID: '${{secrets.AZURE_CLIENT_ID}}'
+          AZURE_CLIENT_SECRET: '${{secrets.AZURE_CLIENT_SECRET}}'
+          AZURE_SUBSCRIPTION_ID: '${{secrets.AZURE_SUBSCRIPTION_ID}}'
+          AZURE_TENANT_ID: '${{secrets.AZURE_TENANT_ID}}'
         run: terraform init
       - name: Terraform Plan
         id: plan
         env:
-          AZURE_CLIENT_ID: '${{secretes.AZURE_CLIENT_ID}}'
-          AZURE_CLIENT_SECRET: '${{secretes.AZURE_CLIENT_SECRET}}'
-          AZURE_SUBSCRIPTION_ID: '${{secretes.AZURE_SUBSCRIPTION_ID}}'
+          AZURE_CLIENT_ID: '${{secrets.AZURE_CLIENT_ID}}'
+          AZURE_CLIENT_SECRET: '${{secrets.AZURE_CLIENT_SECRET}}'
+          AZURE_SUBSCRIPTION_ID: '${{secrets.AZURE_SUBSCRIPTION_ID}}'
           AZURE_TENANT_ID: '${{secretes.AZURE_TENANT_ID}}'
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
-          AZURE_CLIENT_ID: '${{secretes.AZURE_CLIENT_ID}}'
-          AZURE_CLIENT_SECRET: '${{secretes.AZURE_CLIENT_SECRET}}'
-          AZURE_SUBSCRIPTION_ID: '${{secretes.AZURE_SUBSCRIPTION_ID}}'
-          AZURE_TENANT_ID: '${{secretes.AZURE_TENANT_ID}}'
+          AZURE_CLIENT_ID: '${{secrets.AZURE_CLIENT_ID}}'
+          AZURE_CLIENT_SECRET: '${{secrets.AZURE_CLIENT_SECRET}}'
+          AZURE_SUBSCRIPTION_ID: '${{secrets.AZURE_SUBSCRIPTION_ID}}'
+          AZURE_TENANT_ID: '${{secrets.AZURE_TENANT_ID}}'
         run: terraform apply -auto-approve
