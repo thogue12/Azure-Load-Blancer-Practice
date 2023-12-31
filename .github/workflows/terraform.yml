@@ -43,11 +43,17 @@
 #         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
 name: Terraform
-'on':
-  - push
-  - pull_request
+on:
+ push:
+  branches:
+   - main
+ workflow_dispatch:
+  
 permissions:
   contents: read
+
+   
+
 jobs:
   terraform:
     name: Terraform
